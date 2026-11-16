@@ -118,3 +118,37 @@ idf.py monitor
 
 > [!TIP]
 > Para salir del monitor usar `Ctrl + ]`.
+
+---
+
+## 🍓 Configuración del Raspberry Pi
+
+### Prerequisitos
+
+- **Sistema operativo mínimo**: Raspberry Pi OS Lite (sin entorno gráfico)
+- **BusyBox** instalado (incluido en la imagen Lite por defecto)
+
+---
+
+### 1. Habilitar UART — `config.txt`
+
+Ambos archivos (`config.txt` y `cmdline.txt`) se encuentran en la partición **BOOT** de la microSD.
+
+Editá `config.txt` y agregá al final:
+
+```
+enable_uart=1
+```
+
+---
+
+### 2. Liberar la UART de la consola — `cmdline.txt`
+
+En `cmdline.txt` (partición **BOOT**) hay **una sola línea larga**. Borrá únicamente el siguiente fragmento, **sin modificar el resto**:
+
+```
+console=serial0,115200
+```
+
+> [!CAUTION]
+> `cmdline.txt` es una única línea. No agregues saltos de línea ni borres otros parámetros, o el sistema puede no bootear correctamente.
