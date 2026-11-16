@@ -12,6 +12,14 @@ Tener instalado **ESP-IDF Installation Manager (EIM) v5.5.6**.
 
 ---
 
+### Placa ESP32 (pinout)
+
+![Pinout ESP32 DevKit](docs/img_esp32_pinout.webp)
+
+Pines usados por el firmware: UART TX = GPIO17, UART RX = GPIO16, pulsadores en GPIO22, GPIO23 y GPIO34.
+
+---
+
 ### 1. Abrir la terminal desde EIM y pararse en el directorio del proyecto ESP32
 
 Abrir la terminal **desde el EIM** (usando el ícono de terminal en la versión v5.5.6) y luego navegar a la carpeta `esp32`:
