@@ -41,24 +41,24 @@ static c_spin_box spin_box_1, spin_box_2;
 static c_list_box list_box_1;
 static c_edit edit_1;
 
-static c_display *pantalla;
+static c_display *display;
 
-WND_TREE arbol_elementos[] =
+WND_TREE element_tree[] =
 	{
 
 		// Primera fila: Pulsos [edit] [enviar]
-		{&label_1, ID_LABEL_1, "Amplitud:", 10, 10, 120, 50}, // x,y,w,h
+		{&label_1, ID_LABEL_1, "Amplitude:", 10, 10, 150, 50}, // x,y,w,h
 															  //{&edit_1, ID_EDIT_1, "34", 120, 10, 100, 50},
-		{&spin_box_2, ID_SPIN_BOX_2, "spinBox", 120, 10, 100, 50},
-		{&button_1, ID_BUTTON, "Enviar", 230, 10, 100, 50},
+		{&spin_box_2, ID_SPIN_BOX_2, "spinBox", 160, 10, 100, 50},
+		{&button_1, ID_BUTTON, "Send", 270, 10, 100, 50},
 
 		// Segunda fila: Duty [spinbox]
-		{&label_2, ID_LABEL_2, "Frecuencia:", 10, 70, 145, 50},
-		{&spin_box_1, ID_SPIN_BOX, "spinBox", 145, 70, 100, 50},
+		{&label_2, ID_LABEL_2, "Frequency:", 10, 70, 150, 50},
+		{&spin_box_1, ID_SPIN_BOX, "spinBox", 160, 70, 100, 50},
 
 		// Tercera fila: Opciones [lista]
-		{&label_3, ID_LABEL_3, "Tipo:", 10, 140, 100, 50},
-		{&list_box_1, ID_LIST_BOX, "listBox", 100, 140, 180, 50},
+		{&label_3, ID_LABEL_3, "Type:", 10, 140, 150, 50},
+		{&list_box_1, ID_LIST_BOX, "listBox", 160, 140, 180, 50},
 
 		// Elemento para indicar el fin del arbol
 		{NULL, 0, 0, 0, 0, 0, 0}};
@@ -91,12 +91,12 @@ class MVC : public c_wnd
 
 		// Definimos callback (interrupcion) para la lista de seleccion
 		c_list_box *list_box = (c_list_box *)get_wnd_ptr(ID_LIST_BOX);
-		list_box->set_on_change((WND_CALLBACK)&MVC::on_listbox_confirm);
+		list_box->set_on_change((WND_CALLBACK)&MVC::on_list_box_confirm);
 		list_box->clear_item();
-		list_box->add_item((char *)"Senoidal");
-		list_box->add_item((char *)"Cuadrada");
-		list_box->add_item((char *)"Diente Sierra");
-		list_box->add_item((char *)"Triangular");
+		list_box->add_item((char *)"Sine");
+		list_box->add_item((char *)"Square");
+		list_box->add_item((char *)"Sawtooth");
+		list_box->add_item((char *)"Triangle");
 		list_box->select_item(wave_type);
 	}
 
@@ -134,7 +134,7 @@ class MVC : public c_wnd
 		tcsetattr(uart_fd, TCSANOW, &options);
 
 		// Cadena a enviar
-		char mensaje[] = "Hola ESP32\n";
+		char message[] = "Hola ESP32\n";
 
 		// buffer para almacenar la cadena
 		char buffer[20];
@@ -165,7 +165,7 @@ class MVC : public c_wnd
 		this->show_window();
 	}
 
-	void on_listbox_confirm(int ctrl_id, int value)
+	void on_list_box_confirm(int ctrl_id, int value)
 	{
 		wave_type = value; // actualiza el tipo de señal
 		printf("Tipo de señal actualizada: %d\n", wave_type);
@@ -241,14 +241,14 @@ void load_resource()
 }
 
 // Loop Principal.
-void mainLoop(void *phy_fb, int width, int height, int color_bytes)
+void main_loop(void *phy_fb, int width, int height, int color_bytes)
 {
 	load_resource();
 	c_surface *s_surface = new c_surface(UI_WIDTH, UI_HEIGHT, color_bytes, Z_ORDER_LEVEL_2);
-	pantalla = new c_display(phy_fb, width, height, s_surface);
+	display = new c_display(phy_fb, width, height, s_surface);
 
 	mvc.set_surface(s_surface);
-	mvc.connect(NULL, ID_ROOT, 0, 0, 0, UI_WIDTH, UI_HEIGHT, arbol_elementos);
+	mvc.connect(NULL, ID_ROOT, 0, 0, 0, UI_WIDTH, UI_HEIGHT, element_tree);
 	mvc.show_window();
 
 	char buffer[100];

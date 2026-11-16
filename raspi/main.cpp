@@ -12,11 +12,11 @@
 // Agregadas
 #include <pthread.h>
 
-extern void mainLoop(void *phy_fb, int width, int height, int color_bytes);
+extern void main_loop(void *phy_fb, int width, int height, int color_bytes);
 extern void init_std_io();
 
 // Funciones para obtener el framebuffer
-static void *get_embeded_fb_in_display_app(int shared_id);
+static void *get_embedded_fb_in_display_app(int shared_id);
 static void *get_dev_fb(char *path, int &width, int &height, int &color_bytes);
 
 // NOTE: Variables para UART y FIFO
@@ -80,7 +80,7 @@ void *uart_to_fifo_thread(void *arg)
 }
 
 // Funciones para obtener el framebuffer
-static void *get_embeded_fb_in_display_app(int shared_id)
+static void *get_embedded_fb_in_display_app(int shared_id)
 {
 	void *ret = NULL;
 	while (ret == NULL)
@@ -188,7 +188,7 @@ int main(int argc, char **argv)
 	switch (fb_mode)
 	{
 	case FB_APP_MODE:
-		phy_fb = get_embeded_fb_in_display_app(share_id);
+		phy_fb = get_embedded_fb_in_display_app(share_id);
 		break;
 	case FB_DEV_MODE:
 		phy_fb = get_dev_fb(fb_dev_path, screen_width, screen_height, color_bytes);
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	mainLoop(phy_fb, screen_width, screen_height, color_bytes);
+	main_loop(phy_fb, screen_width, screen_height, color_bytes);
 
 	// NOTE: Esperar a que el hilo termine (aunque uart_to_fifo() corre en un bucle infinito)
 	pthread_join(uart_thread, NULL);
